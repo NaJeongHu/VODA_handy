@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VODA_handy">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".DetailedMenuActivity"></activity>
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".StoreListActivity" />
+        <activity android:name=".MypageActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
