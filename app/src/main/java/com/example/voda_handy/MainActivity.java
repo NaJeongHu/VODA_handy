@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLlMidnight = findViewById(R.id.ll_midnight);
         mLlFastfood = findViewById(R.id.ll_fastfood);
 
+
         mIvMypage.setOnClickListener(this);
         mIvSearch.setOnClickListener(this);
         mLlKorean.setOnClickListener(this);
