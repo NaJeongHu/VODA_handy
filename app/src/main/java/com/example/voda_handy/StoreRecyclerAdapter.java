@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class StoreRecyclerAdapter extends RecyclerView.Adapter<StoreRecyclerAdapter.CustomViewHolder> {
     
-    private ArrayList<Store> stores;
+    private ArrayList<StoreInfo> stores;
     private LayoutInflater mInflate;
     private Context context;
 
@@ -37,7 +37,7 @@ public class StoreRecyclerAdapter extends RecyclerView.Adapter<StoreRecyclerAdap
         }
     }
 
-    public StoreRecyclerAdapter(ArrayList<Store> stores, Context context) {
+    public StoreRecyclerAdapter(ArrayList<StoreInfo> stores, Context context) {
         this.stores = stores;
         this.mInflate = LayoutInflater.from(context);
         this.context = context;
@@ -52,10 +52,10 @@ public class StoreRecyclerAdapter extends RecyclerView.Adapter<StoreRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        holder.storename.setText(stores.get(position).getIdtoken().getStorename());
-        holder.star.setText(stores.get(position).getIdtoken().getStar());
-        holder.waiting.setText(stores.get(position).getIdtoken().getWaiting());
-        Glide.with(context).load(stores.get(position).getIdtoken().getImageurl()).into(holder.iv_item_list_title);
+        holder.storename.setText(stores.get(position).getStorename());
+        holder.star.setText(String.valueOf(stores.get(position).getStar()));
+        holder.waiting.setText(String.valueOf(stores.get(position).getWaiting()));
+//        Glide.with(context).load(stores.get(position).getImageurl()).into(holder.iv_item_list_title);
     }
 
     @Override

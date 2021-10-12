@@ -2,6 +2,7 @@ package com.example.voda_handy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -13,16 +14,19 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class StoreListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager layoutManager;
     private ImageView mBackButton;
-    private ArrayList<Store> stores;
+    private ArrayList<StoreInfo> stores;
     private StoreRecyclerAdapter adapter;
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
 
@@ -39,11 +43,15 @@ public class StoreListActivity extends AppCompatActivity implements View.OnClick
     private void init() {
 
         mRecyclerView = findViewById(R.id.recyclerview_list);
+        mRecyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
         mBackButton = findViewById(R.id.btn_list_back);
 
         mBackButton.setOnClickListener(this);
         stores = new ArrayList<>();
 
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("voda_handy");
     }
 
     // when user touch item
@@ -54,7 +62,7 @@ public class StoreListActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onItemClick(View v, int position) {
                         Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-                        intent.putExtra("idToken", stores.get(position).getIdtoken().toString());
+                        intent.putExtra("idToken", stores.get(position).getIdToken());
                         startActivity(intent);
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
@@ -73,47 +81,42 @@ public class StoreListActivity extends AppCompatActivity implements View.OnClick
             stores.clear();
         }
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("voda_handy");
-        mDatabaseRef.child("Store").child("한식").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabaseRef.child("Store").child("한식").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                        Store store = dataSnapshot.getValue(Store.class);
-//                        store store = task.getResult().getValue(store.class);
-                        if (store != null) {
-                            stores.add(store);
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                    // 반복문으로 데이터 LIST 추출
+                    String idToken = snapshot.getKey();
+                    mDatabaseRef.child("Store").child("한식").child(idToken).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                                StoreInfo storeInfo = snapshot.getValue(StoreInfo.class);
+                                if (storeInfo.getStorename() != null) {
+                                    storeInfo.setIdToken(idToken);
+                                    stores.add(storeInfo);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // 디비를 가져오던 중 에러 발생 시 에러문 출력
+                Log.e("StoreListActivity", String.valueOf(error.toException()));
             }
         });
 
-//        connectToAdapter();
-    }
-
-    private void connectToAdapter() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (stores != null || stores.isEmpty() == false || stores.size() != 0) {
-//                            Collections.sort(arr,new Filtering_for_ganada());
-                            adapter = new StoreRecyclerAdapter(stores, getApplicationContext());
-                            mRecyclerView.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        }
-//                        base_progressBar.setVisibility(View.GONE);
-                    }
-                });
-            }
-        }).start();
+        adapter = new StoreRecyclerAdapter(stores, getApplicationContext());
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
