@@ -1,6 +1,8 @@
 package com.example.voda_handy;
 
-public class Menu {
+import java.io.Serializable;
+
+public class Menu implements Serializable {
     private String menuname;
     private String explanation;
     private String imageurl;

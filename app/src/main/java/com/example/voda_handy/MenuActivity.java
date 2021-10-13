@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,6 +66,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onItemClick(View v, int position) {
                         Intent intent = new Intent(getApplicationContext(), DetailedMenuActivity.class);
+                        intent.putExtra("menu", menu.get(position));
                         startActivity(intent);
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
