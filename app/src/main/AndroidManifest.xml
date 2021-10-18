@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VODA_handy">
+        <activity android:name=".ShoppingBasketActivity"></activity>
         <activity android:name=".DetailedMenuActivity"></activity>
         <activity android:name=".MenuActivity" />
         <activity android:name=".StoreListActivity" />

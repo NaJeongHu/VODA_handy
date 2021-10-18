@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="15dp">
+
+    <TextView
+        android:id="@+id/basket_menu_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"
+        android:text="돈까스탕수육"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/basket_menu_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/basket_menu_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:text="* 가격 : 8500원"
+        android:textSize="13sp"/>
+
+    <TextView
+        android:id="@+id/basket_menu_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/basket_menu_price"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="7dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="* 추가선택 : 탕수육(100g) 추가 (2,500원) / 왕교자만두(4개) 추가 (2,500원)"
+        android:textSize="13sp"/>
+
+    <TextView
+        android:id="@+id/basket_menu_total_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/basket_menu_option"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:text="23,000원"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_basket_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/basket_menu_option"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal"
+        android:background="@drawable/round_rectangle">
+
+        <ImageView
+            android:id="@+id/iv_basket_number_minus"
+            android:layout_width="10sp"
+            android:layout_height="10sp"
+            android:layout_weight="1"
+            android:elevation="1dp"
+            android:layout_gravity="center"
+            android:src="@drawable/minus"/>
+
+        <TextView
+            android:id="@+id/tv_basket_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1개"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/iv_basket_number_plus"
+            android:layout_width="10sp"
+            android:layout_height="10sp"
+            android:layout_weight="1"
+            android:elevation="1dp"
+            android:layout_gravity="center"
+            android:src="@drawable/plus"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/basket_cancel"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/cancel"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_basket_number"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

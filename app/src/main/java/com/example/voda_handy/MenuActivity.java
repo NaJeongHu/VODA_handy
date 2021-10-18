@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +27,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ImageView mBackButton;
+    private FloatingActionButton mFbBasket;
     private ArrayList<Menu> menu;
     private MenuRecyclerAdapter adapter;
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
@@ -50,7 +52,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mBackButton = findViewById(R.id.btn_list_back);
+        mFbBasket = findViewById(R.id.fb_tobasket);
 
+        mFbBasket.setOnClickListener(this);
         mBackButton.setOnClickListener(this);
         menu = new ArrayList<>();
 
@@ -111,6 +115,16 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_list_back:
+                finish();
+                break;
 
+            case R.id.fb_tobasket:
+                Intent intent = new Intent(this, ShoppingBasketActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
     }
 }
