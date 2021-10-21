@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -32,15 +34,20 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private FirebaseAuth mFirebaseAuth;     // 파이어베이스 인증
-    private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
-    private EditText mEtEmail, mEtPassword;
-    private ImageView mIvPicture;
-    private Uri imageUri;
+    // 파이어베이스
+    private FirebaseAuth mFirebaseAuth;
+    private DatabaseReference mDatabaseRef;
     private StorageTask uploadTask;
     private StorageReference storageReference;
-    private static final int IMAGE_REQUEST = 0;
+
+    // UI
+    private EditText mEtEmail, mEtPassword;
+    private ImageView mIvPicture;
     private Button mBtnRegister;
+
+    // 이미지
+    private static final int IMAGE_REQUEST = 0;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("voda_handy");
+        storageReference = FirebaseStorage.getInstance().getReference("handy_profiles");
     }
 
     private void init() {
@@ -60,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mIvPicture = findViewById(R.id.iv_picture);
 
         mBtnRegister.setOnClickListener(this);
+        mIvPicture.setOnClickListener(this);
     }
 
     @Override
@@ -79,8 +88,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             account.setEmailId(firebaseUser.getEmail());
                             account.setPassword(strPassword);
 
-                            // setValue : database에 insert 행위위
-                           mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
+                            // setValue : database에 insert 행위
+                            mDatabaseRef.child("UserAccount").child("handy").child(firebaseUser.getUid()).setValue(account);
+
+                            if (imageUri != null) {
+                                uploadImage();
+                            } else {
+                                mDatabaseRef = FirebaseDatabase.getInstance().getReference("voda_handy").child("UserAccount").child("handy").child(firebaseUser.getUid());
+                                HashMap<String, Object> map = new HashMap<>();
+                                map.put("imageurl", "");
+                                mDatabaseRef.updateChildren(map);
+                            }
 
                             Toast.makeText(RegisterActivity.this,"회원가입 성공",Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -91,6 +109,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }
                 });
                 break;
+
             case R.id.iv_picture:
                 Intent intent = new Intent();
                 intent.setType("image/*");
@@ -104,8 +123,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void uploadImage() {
-
-        if(imageUri != null) { //intent의 결과로 imageUri가 넘어왔다면,
+        if(imageUri != null) {
+            // 파이어베이스 스토리지
             final StorageReference fileReference = storageReference.child(System.currentTimeMillis()
                     +"."+getFileExtension(imageUri));
 
@@ -125,10 +144,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if(task.isSuccessful()){
                         Uri downloadUri = task.getResult();
                         String mUri = downloadUri.toString();
-
-//                        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
                         HashMap<String, Object> map = new HashMap<>();
-                        map.put("imageURL", mUri);
+                        map.put("imageurl", mUri);
+
+                        FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+                        mDatabaseRef = FirebaseDatabase.getInstance().getReference("voda_handy").child("UserAccount").child("handy").child(firebaseUser.getUid());
                         mDatabaseRef.updateChildren(map);
                     } else {
                         Toast.makeText(RegisterActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
