@@ -14,4 +14,6 @@
     <string name="basket_dialog_warning">모두 삭제하시겠습니까?</string>
     <string name="basket_dialog_no">취소</string>
     <string name="basket_dialog_yes">확인</string>
+    //shopping basket empty
+    <string name="basket_empty_explain">장바구니가 텅 비었어요.</string>
 </resources>

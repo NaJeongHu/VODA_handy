@@ -1,9 +1,11 @@
 package com.example.voda_handy;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,19 +17,25 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class DetailedMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView mIvBack, mIvMinus, mIvPlus;
+    private ImageView mIvBack, mIvMenu, mIvMinus, mIvPlus;
     private Button mBtnOrder;
-    private TextView mTvMenuName, mTvMenuDetail, mTvTotalPrice, mTvMenuNumber;
+    private TextView mTvMenuName, mTvMenuDetail, mTvPrice, mTvTotalPrice, mTvMenuNumber;
 
+    private String storeName;
+    private Menu menu;
     private int price, number;
 
-    private FirebaseAuth mFirebaseAuth;     // 파이어베이스 인증
-
+    private FirebaseUser mFirebaseUser;     // 파이어베이스 인증
+    private StorageReference mFirebaseStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +45,44 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void init() {
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mFirebaseStorage = FirebaseStorage.getInstance().getReference();
+
+        storeName = getIntent().getStringExtra("store");
+        menu = (Menu) getIntent().getSerializableExtra("menu");
+        price = menu.getPrice(); // 처음 가격 가져오기
+        number = 1;
+
         mIvBack = findViewById(R.id.iv_detail_back);
+        mIvMenu = findViewById(R.id.iv_detail_menu);
         mBtnOrder = findViewById(R.id.btn_detail_order);
         mTvMenuName = findViewById(R.id.tv_detail_menu_name);
         mTvMenuNumber = findViewById(R.id.tv_detail_number2);
         mTvMenuDetail = findViewById(R.id.tv_detail_menu_detail);
+        mTvPrice = findViewById(R.id.tv_detail_price);
         mTvTotalPrice = findViewById(R.id.tv_detail_total_price);
         mIvPlus = findViewById(R.id.iv_detail_number_plus);
         mIvMinus = findViewById(R.id.iv_detail_number_minus);
         mIvMinus.setColorFilter(R.color.gray);
+
+        mTvMenuName.setText(menu.getMenuname());
+        mTvMenuDetail.setText(menu.getExplanation());
+        mTvPrice.setText(changeNumberFormat(price) + "원");
+        mTvTotalPrice.setText(changeNumberFormat(price) + "원");
+        mIvMenu.setImageURI(Uri.parse(menu.getImageurl()));
+        Log.d("Debug", "imageURL: " + menu.getImageurl());
+        //TODO: Image 가져오기
+//        mFirebaseStorage.child("").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                mIvMenu.setImageURI(uri);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.e("Debug", "Fail to download image url");
+//            }
+//        });
 
         mIvBack.setOnClickListener(this);
         mBtnOrder.setOnClickListener(this);
@@ -73,10 +110,6 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
 
             }
         });
-
-        //TODO: firebase에서 가격, 추가조건 가져오기
-        price = 23000; // 처음 가격 가져오기
-        number = 1;
     }
 
     @Override
@@ -87,12 +120,13 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.btn_detail_order:
-                //TODO: firebase에 update
+                ShoppingList shoppingList = ShoppingList.getShoppingList();
+                shoppingList.setStoreName(storeName);
+                shoppingList.addShoppingList(new Menu(menu.getMenuname(), price, number));
                 finish();
                 break;
 
             case R.id.iv_detail_number_plus:
-                Log.d("Debug", "plus...");
                 number = number + 1;
                 mTvMenuNumber.setText(number + "개");
                 mBtnOrder.setText(number + "개 담기");
@@ -100,7 +134,6 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.iv_detail_number_minus:
-                Log.d("Debug", "minus...");
                 if(number >= 2) {
                     number = number - 1;
                     mTvMenuNumber.setText(number + "개");

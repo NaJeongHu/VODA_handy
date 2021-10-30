@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,7 @@ public class StoreListActivity extends AppCompatActivity implements View.OnClick
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ImageView mBackButton;
+    private FloatingActionButton mFloatingActionButton;
     private ArrayList<StoreInfo> stores;
     private StoreRecyclerAdapter adapter;
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
@@ -47,8 +50,10 @@ public class StoreListActivity extends AppCompatActivity implements View.OnClick
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mBackButton = findViewById(R.id.btn_list_back);
+        mFloatingActionButton = findViewById(R.id.fb_tobasket);
 
         mBackButton.setOnClickListener(this);
+        mFloatingActionButton.setOnClickListener(this);
         stores = new ArrayList<>();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("voda_handy");
@@ -121,6 +126,20 @@ public class StoreListActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_list_back:
+                finish();
+                break;
 
+            case R.id.fb_tobasket:
+                if(ShoppingList.getShoppingList().getMenus() == null) {
+                    Toast.makeText(this, "메뉴를 선택해주세요", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(this, ShoppingBasketActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+        }
     }
 }

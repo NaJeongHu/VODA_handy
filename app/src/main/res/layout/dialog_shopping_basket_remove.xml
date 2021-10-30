@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/dialog_basket_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="40dp"

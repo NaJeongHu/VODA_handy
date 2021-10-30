@@ -176,7 +176,7 @@
         android:layout_margin="20dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fb_tomap"
+            android:id="@+id/fb_tobasket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#253628"

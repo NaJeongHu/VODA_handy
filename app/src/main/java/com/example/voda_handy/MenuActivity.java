@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +35,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     private MenuRecyclerAdapter adapter;
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
     private String idToken;
+    private String storeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onItemClick(View v, int position) {
                         Intent intent = new Intent(getApplicationContext(), DetailedMenuActivity.class);
+                        intent.putExtra("store", storeName);
                         intent.putExtra("menu", menu.get(position));
                         startActivity(intent);
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
@@ -84,6 +89,18 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getDataFromServer() {
         // TODO : 파이어베이스 연동
+        mDatabaseRef.child("Store").child("한식").child(idToken).child("StoreInfo").get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                storeName = (String) dataSnapshot.child("storename").getValue();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Debug", "Fail to get store name");
+            }
+        });
+
         if (menu != null && menu.size() != 0) {
             menu.clear();
         }
@@ -121,9 +138,13 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.fb_tobasket:
-                Intent intent = new Intent(this, ShoppingBasketActivity.class);
-                startActivity(intent);
-                finish();
+                if(ShoppingList.getShoppingList().getMenus() == null) {
+                    Toast.makeText(this, "메뉴를 선택해주세요", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(this, ShoppingBasketActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
                 break;
         }
     }

@@ -22,31 +22,30 @@
         android:id="@+id/basket_menu_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/basket_menu_name"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="@id/basket_menu_name"
+        app:layout_constraintLeft_toRightOf="@id/basket_menu_name"
         android:layout_marginLeft="15dp"
-        android:text="* 가격 : 8500원"
+        android:text="가격: 8500원"
         android:textSize="13sp"/>
 
-    <TextView
-        android:id="@+id/basket_menu_option"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/basket_menu_price"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="7dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:text="* 추가선택 : 탕수육(100g) 추가 (2,500원) / 왕교자만두(4개) 추가 (2,500원)"
-        android:textSize="13sp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/basket_menu_option"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/basket_menu_price"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        android:layout_marginTop="7dp"-->
+<!--        android:paddingLeft="15dp"-->
+<!--        android:paddingRight="15dp"-->
+<!--        android:text="* 추가선택 : 탕수육(100g) 추가 (2,500원) / 왕교자만두(4개) 추가 (2,500원)"-->
+<!--        android:textSize="13sp"/>-->
 
     <TextView
         android:id="@+id/basket_menu_total_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/basket_menu_option"
+        app:layout_constraintTop_toBottomOf="@id/basket_menu_price"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
@@ -58,7 +57,7 @@
         android:id="@+id/ll_basket_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/basket_menu_option"
+        app:layout_constraintTop_toBottomOf="@id/basket_menu_price"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
