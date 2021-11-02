@@ -102,6 +102,12 @@ public class ShoppingBasketActivity extends AppCompatActivity implements View.On
                 break;
 
             case R.id.btn_basket_order:
+                String name = ShoppingList.getShoppingList().getMenus().get(0).getMenuname();
+                Integer price = ShoppingList.getShoppingList().getTotalPrice();
+
+                PayActivity payActivity = new PayActivity(name, price);
+                Intent intentPay = new Intent(getApplicationContext(), payActivity.getClass());
+                startActivity(intentPay);
                 break;
         }
     }
