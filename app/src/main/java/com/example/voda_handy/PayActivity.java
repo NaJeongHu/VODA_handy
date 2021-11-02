@@ -114,6 +114,12 @@ public class PayActivity extends AppCompatActivity {
                 pgToken = pg_Token;
 
                 this.approvePayment();
+
+                // MainActivity.class를 가고자 하는 엑티비티로 변경 필요
+                Intent intent = new Intent(PayActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();   // 다시 돌아오지 않을 것이므로 PayActivity finish
+
             } else if (url != null && url.startsWith("intent://")) {
                 try {
                     Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
@@ -123,7 +129,9 @@ public class PayActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            view.loadUrl(url);
+
+            // 다른 엑티비티로 intent 전달해줄 것이므로 의미 없는 구문
+//            view.loadUrl(url);
             return false;
         }
     }
