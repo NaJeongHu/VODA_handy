@@ -19,13 +19,15 @@ public class PayActivity extends AppCompatActivity {
     String tidPin; //결제 고유 번호
     String pgToken; //결제 요청 토큰
 
+    static String storeName;
     static String productName; //상품 이름
     static Integer productPrice; //상품 가격
 
     public PayActivity() {
     }
 
-    public PayActivity(String productName, Integer productPrice) {
+    public PayActivity(String storeName, String productName, Integer productPrice) {
+        this.storeName = storeName;
         this.productName = productName;
         this.productPrice = productPrice;
     }
@@ -115,11 +117,16 @@ public class PayActivity extends AppCompatActivity {
 
                 this.approvePayment();
 
-                // MainActivity.class를 가고자 하는 엑티비티로 변경 필요
-                Intent intent = new Intent(PayActivity.this, MainActivity.class);
+//                // MainActivity.class를 가고자 하는 엑티비티로 변경 필요
+//                OrderSuccessActivity orderSuccessActivity = new OrderSuccessActivity(storeName, productName);
+//                Intent intentorder = new Intent(PayActivity.this, orderSuccessActivity.getClass());
+//                startActivity(intentorder);
+//                finish();   // 다시 돌아오지 않을 것이므로 PayActivity finish
+                Intent intent = new Intent(getApplicationContext(), OrderSuccessActivity.class);
+                intent.putExtra("store", storeName);
+                intent.putExtra("menu", productName);
                 startActivity(intent);
-                finish();   // 다시 돌아오지 않을 것이므로 PayActivity finish
-
+                finish();
             } else if (url != null && url.startsWith("intent://")) {
                 try {
                     Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);

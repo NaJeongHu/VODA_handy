@@ -104,10 +104,12 @@ public class ShoppingBasketActivity extends AppCompatActivity implements View.On
             case R.id.btn_basket_order:
                 String name = ShoppingList.getShoppingList().getMenus().get(0).getMenuname();
                 Integer price = ShoppingList.getShoppingList().getTotalPrice();
+                String storeName = ShoppingList.getShoppingList().getStoreName();
 
-                PayActivity payActivity = new PayActivity(name, price);
+                PayActivity payActivity = new PayActivity(storeName, name, price);
                 Intent intentPay = new Intent(getApplicationContext(), payActivity.getClass());
                 startActivity(intentPay);
+                finish();
                 break;
         }
     }

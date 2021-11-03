@@ -16,4 +16,7 @@
     <string name="basket_dialog_yes">확인</string>
     //shopping basket empty
     <string name="basket_empty_explain">장바구니가 텅 비었어요.</string>
+
+    //order_success
+    <string name="order_success_tohome">홈으로</string>
 </resources>
