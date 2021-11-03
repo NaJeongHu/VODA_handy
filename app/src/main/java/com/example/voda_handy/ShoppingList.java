@@ -8,8 +8,7 @@ public class ShoppingList {
     private String storeName;
     private ArrayList<Menu> mMenus;
 
-    private ShoppingList() {
-    }
+    private ShoppingList() { }
 
     public static ShoppingList getShoppingList() {
         if(sShoppingList == null) {

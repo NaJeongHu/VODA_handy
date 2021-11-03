@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ImageView mBackButton;
@@ -41,6 +40,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
         init();
         addItemTouchListenerOnRecyclerView();
         getDataFromServer();

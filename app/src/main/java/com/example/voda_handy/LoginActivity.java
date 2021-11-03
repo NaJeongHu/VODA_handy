@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
     private EditText mEtEmail, mEtPassword;
     private Button mBtnLogin, mBtnRegister;
+    private TextView mTvJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +41,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEtEmail = findViewById(R.id.et_email);
         mEtPassword = findViewById(R.id.et_password);
         mBtnLogin = findViewById(R.id.btn_login);
-        mBtnRegister = findViewById(R.id.btn_register);
+//        mBtnRegister = findViewById(R.id.btn_register);
+        mTvJoin = findViewById(R.id.btn_join);
 
         mBtnLogin.setOnClickListener(this);
-        mBtnRegister.setOnClickListener(this);
+//        mBtnRegister.setOnClickListener(this);
+        mTvJoin.setOnClickListener(this);
     }
 
     @Override
@@ -67,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
                 break;
 
-            case R.id.btn_register:
+            case R.id.btn_join:
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;
