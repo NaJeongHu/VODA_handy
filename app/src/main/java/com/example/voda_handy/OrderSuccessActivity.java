@@ -1,5 +1,6 @@
 package com.example.voda_handy;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,10 +12,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class OrderSuccessActivity extends AppCompatActivity {
 
@@ -49,7 +54,19 @@ public class OrderSuccessActivity extends AppCompatActivity {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("voda_handy")
                 .child("Store").child("한식").child("AeUV4CEje9ZQgWSUFjV3ywO5Umk2")
                 .child("OrderList").child("조리전");
-        mDatabaseReference.push().setValue(hashMap);
+
+        mDatabaseReference.orderByKey().limitToLast(1).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                HashMap<String, Object> value = (HashMap<String, Object>) task.getResult().getValue();
+                Iterator<String> keys = value.keySet().iterator();
+                String index = keys.next();
+                int newIndex = Integer.parseInt(index) + 1;
+                Log.d("orderDebug", "newIndex: " + newIndex);
+                mDatabaseReference.child(newIndex + "").setValue(hashMap);
+            }
+        });
+//        mDatabaseReference.push().setValue(hashMap);
 
 
     }
