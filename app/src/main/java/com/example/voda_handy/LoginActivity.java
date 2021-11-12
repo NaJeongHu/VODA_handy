@@ -38,8 +38,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void init() {
-        mEtEmail = findViewById(R.id.et_email);
-        mEtPassword = findViewById(R.id.et_password);
+        mEtEmail = findViewById(R.id.edit_login_email);
+        mEtPassword = findViewById(R.id.edit_login_password);
         mBtnLogin = findViewById(R.id.btn_login);
 //        mBtnRegister = findViewById(R.id.btn_register);
         mTvJoin = findViewById(R.id.btn_join);

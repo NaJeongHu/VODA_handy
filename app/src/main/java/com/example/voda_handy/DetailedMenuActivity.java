@@ -12,7 +12,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -28,7 +30,8 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
 
     private ImageView mIvBack, mIvMenu, mIvMinus, mIvPlus;
     private Button mBtnOrder;
-    private TextView mTvMenuName, mTvMenuDetail, mTvPrice, mTvTotalPrice, mTvMenuNumber;
+    private TextView mTvMenuName, mTvMenuDetail, mTvPrice, mTvTotalPrice, mTvMenuNumber, mTvMenuOrderNumber;
+    private CheckBox mCbNormal, mCbMore;
 
     private String storeName;
     private Menu menu;
@@ -57,17 +60,20 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
         mIvMenu = findViewById(R.id.iv_detail_menu);
         mBtnOrder = findViewById(R.id.btn_detail_order);
         mTvMenuName = findViewById(R.id.tv_detail_menu_name);
-        mTvMenuNumber = findViewById(R.id.tv_detail_number2);
+        mTvMenuNumber = findViewById(R.id.tv_detail_number);
+        mTvMenuOrderNumber = findViewById(R.id.tv_detail_order_number);
         mTvMenuDetail = findViewById(R.id.tv_detail_menu_detail);
-        mTvPrice = findViewById(R.id.tv_detail_price);
+//        mTvPrice = findViewById(R.id.tv_detail_price);
         mTvTotalPrice = findViewById(R.id.tv_detail_total_price);
-        mIvPlus = findViewById(R.id.iv_detail_number_plus);
-        mIvMinus = findViewById(R.id.iv_detail_number_minus);
+        mIvPlus = findViewById(R.id.iv_detail_plus);
+        mIvMinus = findViewById(R.id.iv_detail_minus);
         mIvMinus.setColorFilter(R.color.gray);
+        mCbNormal = findViewById(R.id.cb_detail_normal);
+        mCbMore = findViewById(R.id.cb_detail_more);
 
         mTvMenuName.setText(menu.getMenuname());
         mTvMenuDetail.setText(menu.getExplanation());
-        mTvPrice.setText(changeNumberFormat(price) + "원");
+//        mTvPrice.setText(changeNumberFormat(price) + "원");
         mTvTotalPrice.setText(changeNumberFormat(price) + "원");
         mIvMenu.setImageURI(Uri.parse(menu.getImageurl()));
         Log.d("Debug", "imageURL: " + menu.getImageurl());
@@ -88,6 +94,8 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
         mBtnOrder.setOnClickListener(this);
         mIvMinus.setOnClickListener(this);
         mIvPlus.setOnClickListener(this);
+        mCbNormal.setOnClickListener(this);
+        mCbMore.setOnClickListener(this);
 
         mTvMenuNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,11 +106,12 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String strNumber = s.toString();
-                if(strNumber.equals("1개")){
+                if(strNumber.equals("1")){
                     mIvMinus.setColorFilter(R.color.gray);
                 } else {
                     mIvMinus.clearColorFilter();
                 }
+                mTvMenuOrderNumber.setText(s.toString());
             }
 
             @Override
@@ -126,19 +135,33 @@ public class DetailedMenuActivity extends AppCompatActivity implements View.OnCl
                 finish();
                 break;
 
-            case R.id.iv_detail_number_plus:
+            case R.id.iv_detail_plus:
                 number = number + 1;
-                mTvMenuNumber.setText(number + "개");
-                mBtnOrder.setText(number + "개 담기");
+                mTvMenuNumber.setText(number + "");
+                mTvMenuOrderNumber.setText(number + "");
                 mTvTotalPrice.setText(changeNumberFormat(number * price) + "원");
                 break;
 
-            case R.id.iv_detail_number_minus:
+            case R.id.iv_detail_minus:
                 if(number >= 2) {
                     number = number - 1;
-                    mTvMenuNumber.setText(number + "개");
-                    mBtnOrder.setText(number + "개 담기");
+                    mTvMenuNumber.setText(number + "");
+                    mTvMenuOrderNumber.setText(number + "");
                     mTvTotalPrice.setText(changeNumberFormat(number * price) + "원");
+                }
+                break;
+
+            case R.id.cb_detail_normal:
+                if(mCbMore.isChecked()) {
+                    mCbMore.setChecked(false);
+                    mCbNormal.setChecked(true);
+                }
+                break;
+
+            case R.id.cb_detail_more:
+                if(mCbNormal.isChecked()) {
+                    mCbNormal.setChecked(false);
+                    mCbMore.setChecked(true);
                 }
                 break;
         }
